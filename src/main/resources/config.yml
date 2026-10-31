@@ -1,0 +1,35 @@
+# LodestoneWarps Configuration
+
+# Minimum portal dimensions (interior size)
+min-portal-width: 1
+min-portal-height: 2
+
+# Maximum portal dimensions (interior size)
+max-portal-width: 10
+max-portal-height: 10
+
+# Teleport cooldown in seconds (0 to disable)
+teleport-cooldown: 3
+
+# Enable particle effects
+particles-enabled: true
+
+# Enable sound effects
+sounds-enabled: true
+
+# Allow cross-dimension portals (Overworld <-> Nether <-> End)
+allow-cross-dimension: true
+
+# Enable debug logging for teleportation
+debug-enabled: false
+
+# Messages
+messages:
+  portal-created: "&a✦ Portal '&e%name%&a' created! Build another with the same name to link them."
+  portal-linked: "&a✦ Portal '&e%name%&a' is now linked! Step inside to teleport."
+  portal-unlinked: "&c✦ Portal '&e%name%&a' has no partner yet."
+  portal-destroyed: "&c✦ Portal '&e%name%&a' has been destroyed."
+  invalid-frame: "&cInvalid portal frame! Build a rectangular lodestone frame with air inside."
+  teleporting: "&b✦ Warping to '&e%name%&b'..."
+  cooldown: "&cPlease wait %time% seconds before using another portal."
+  no-permission: "&cYou don't have permission to do that."

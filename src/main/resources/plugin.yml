@@ -1,0 +1,26 @@
+name: LodestoneWarps
+version: ${project.version}
+main: com.lodestonewarps.LodestoneWarps
+api-version: '1.21'
+description: Create linked portals using lodestone blocks and signs
+author: KitsuneTech
+
+commands:
+  lodewarps:
+    description: Manage lodestone warps
+    usage: /<command> [list|info|reload]
+    aliases: [lw, lodewarp]
+
+permissions:
+  lodestonewarps.create:
+    description: Allows creating lodestone portals
+    default: true
+  lodestonewarps.use:
+    description: Allows using lodestone portals
+    default: true
+  lodestonewarps.list:
+    description: Allows listing your portals
+    default: true
+  lodestonewarps.admin:
+    description: Admin commands (reload, list all)
+    default: op
