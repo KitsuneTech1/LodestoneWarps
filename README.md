@@ -57,6 +57,7 @@ Key options in `config.yml`:
 
 - A Spigot or Paper server on Minecraft 1.21. Get Paper at https://papermc.io/downloads . This plugin will not work on vanilla Minecraft or on Realms.
 - Java 21. Get it at https://adoptium.net . Check what you have with `java -version` in a terminal.
+- Maven 3.9 or newer for Option B. Get it at https://maven.apache.org/download.cgi . Check what you have with `mvn -version` in a terminal.
 
 ### Step by step
 
@@ -67,10 +68,9 @@ Key options in `config.yml`:
 **Option B: build from source**
 
 1. Install a Java 21 JDK from https://adoptium.net if you don't have one.
-2. Clone the repo, or click "Code" then "Download ZIP" on GitHub if you don't use git: `git clone https://github.com/KitsuneTech1/LodestoneWarps.git`
-3. `cd LodestoneWarps`
-4. Run `mvn clean package`
-5. The built jar lands at `target/LodestoneWarps-1.0.0.jar`.
+2. Clone the repo, or click "Code" then "Download ZIP" on GitHub if you don't use git: `git clone https://github.com/KitsuneTech1/LodestoneWarps.git`. If you download a ZIP, extract it and open a terminal in the extracted repository directory.
+3. Run `mvn clean package` from the repository directory.
+4. The built jar lands at `target/LodestoneWarps-1.0.0.jar`.
 
 **Then, for either option:**
 
