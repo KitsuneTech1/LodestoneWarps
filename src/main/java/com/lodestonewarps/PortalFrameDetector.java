@@ -16,10 +16,18 @@ public class PortalFrameDetector {
     private final int maxHeight;
 
     public PortalFrameDetector(LodestoneWarps plugin) {
-        this.minWidth = plugin.getConfig().getInt("min-portal-width", 1);
-        this.minHeight = plugin.getConfig().getInt("min-portal-height", 2);
-        this.maxWidth = plugin.getConfig().getInt("max-portal-width", 10);
-        this.maxHeight = plugin.getConfig().getInt("max-portal-height", 10);
+        this(
+                plugin.getConfig().getInt("min-portal-width", 1),
+                plugin.getConfig().getInt("min-portal-height", 2),
+                plugin.getConfig().getInt("max-portal-width", 10),
+                plugin.getConfig().getInt("max-portal-height", 10));
+    }
+
+    PortalFrameDetector(int minWidth, int minHeight, int maxWidth, int maxHeight) {
+        this.minWidth = minWidth;
+        this.minHeight = minHeight;
+        this.maxWidth = maxWidth;
+        this.maxHeight = maxHeight;
     }
 
     /**
@@ -77,6 +85,10 @@ public class PortalFrameDetector {
             width++;
         }
 
+        if (width > maxWidth + 2) {
+            return null; // Too wide
+        }
+
         if (width < minWidth + 2) {
             return null; // Too narrow (need 2 extra for the frame sides)
         }
@@ -90,6 +102,10 @@ public class PortalFrameDetector {
             frameBlocks.add(current.getLocation());
             current = current.getRelative(BlockFace.UP);
             height++;
+        }
+
+        if (height > maxHeight + 2) {
+            return null; // Too tall
         }
 
         if (height < minHeight + 2) {
@@ -127,7 +143,7 @@ public class PortalFrameDetector {
         for (int x = 0; x < interiorWidth; x++) {
             for (int y = 0; y < interiorHeight; y++) {
                 Block interiorBlock = interiorStart.getRelative(widthDirection, x).getRelative(BlockFace.UP, y);
-                if (!interiorBlock.getType().isAir()) {
+                if (!isAir(interiorBlock.getType())) {
                     return null; // Interior not empty
                 }
                 interiorBlocks.add(interiorBlock.getLocation());
@@ -139,6 +155,10 @@ public class PortalFrameDetector {
         }
 
         return new FrameResult(frameBlocks, interiorBlocks);
+    }
+
+    private boolean isAir(Material material) {
+        return material == Material.AIR || material == Material.CAVE_AIR || material == Material.VOID_AIR;
     }
 
     public static class FrameResult {
