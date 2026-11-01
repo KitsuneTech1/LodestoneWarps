@@ -1,17 +1,20 @@
 <p align="center"><a href="https://kitsunetechnologies.org/work"><img src="https://raw.githubusercontent.com/KitsuneTech1/.github/main/assets/kitsune-banner.svg" alt="Built by Kitsune Technologies" width="760"></a></p>
 
-# LodestoneWarps
+# Lodestone Links
 
-Build a lodestone frame, name it with a sign, build a matching one elsewhere, and step through to teleport.
+Paper plugin for craftable linked lodestone portals in Minecraft.
 
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 ![Minecraft](https://img.shields.io/badge/Minecraft-1.21-brightgreen.svg)
-![Paper](https://img.shields.io/badge/Paper-API-orange.svg)
 ![Java](https://img.shields.io/badge/Java-21-blue.svg)
 
-## What it does
+## Quick start
 
-LodestoneWarps lets players build linked portals without commands or plugins like Nether portals. Build a rectangular lodestone frame with air inside, place a sign on it with a portal name, then build another lodestone frame with the same name anywhere, in the same world or a different one. The two portals link automatically, and walking through either one teleports you to the other.
+1. Drop the jar into your server's `plugins/` folder.
+2. Restart the server (full restart, not `/reload`). This generates `config.yml` on first load.
+3. Verify: run `/lodewarps list` in-game or console. You should see a response, not "Unknown command."
+
+Then to create a portal: build a rectangular lodestone frame with air inside, place a sign on it with a portal name, and build another matching lodestone frame with the same name anywhere else. The two link automatically. Walk through either one to teleport to the other.
 
 ## Features
 
@@ -53,38 +56,27 @@ Key options in `config.yml`:
 
 ## Install
 
-### What you need
+### Requirements
 
-- A Spigot or Paper server on Minecraft 1.21. Get Paper at https://papermc.io/downloads . This plugin will not work on vanilla Minecraft or on Realms.
-- Java 21. Get it at https://adoptium.net . Check what you have with `java -version` in a terminal.
-- Maven 3.9 or newer for Option B. Get it at https://maven.apache.org/download.cgi . Check what you have with `mvn -version` in a terminal.
+- Paper server on Minecraft 1.21. (Get Paper at https://papermc.io/downloads. Works on Paper only, not vanilla or Realms.)
+- Java 21. (Check what you have with `java -version`. Get Java 21 from https://adoptium.net.)
 
-### Step by step
+### From a release
 
-**Option A: download the jar**
+1. Go to the [v1.0.0 release](https://github.com/KitsuneTech1/LodestoneWarps/releases/tag/v1.0.0) and download `LodestoneWarps-1.0.0.jar`.
 
-1. Go to the [v1.0.0 release](https://github.com/KitsuneTech1/LodestoneWarps/releases/tag/v1.0.0) and download `LodestoneWarps-1.0.0.jar` from the Assets list.
+### From source
 
-**Option B: build from source**
+1. Install Java 21 JDK from https://adoptium.net if you don't have one.
+2. Clone the repo: `git clone https://github.com/KitsuneTech1/LodestoneWarps.git`. Or download the ZIP and extract it.
+3. Open a terminal in the repository directory and run `mvn clean package`.
+4. The jar will be at `target/LodestoneWarps-1.0.0.jar`.
 
-1. Install a Java 21 JDK from https://adoptium.net if you don't have one.
-2. Clone the repo, or click "Code" then "Download ZIP" on GitHub if you don't use git: `git clone https://github.com/KitsuneTech1/LodestoneWarps.git`. If you download a ZIP, extract it and open a terminal in the extracted repository directory.
-3. Run `mvn clean package` from the repository directory.
-4. The built jar lands at `target/LodestoneWarps-1.0.0.jar`.
+### Troubleshooting
 
-**Then, for either option:**
-
-1. Drop the jar into your server's `plugins/` folder.
-2. Restart the server. Do a full restart, not `/reload`. `config.yml` is generated the first time the plugin loads.
-3. Verify it worked: run `/lodewarps list` in-game or from the console. You should see a response listing your portals (empty is fine), not "Unknown command." Check the console log for errors on startup too.
-
-It worked if the server starts with no errors mentioning LodestoneWarps and `/lodewarps list` responds instead of saying the command doesn't exist.
-
-**Troubleshooting**
-
-- `UnsupportedClassVersionError` in the console: your server is running an older Java than 21. Install Java 21 from the link above and make sure your server startup script points at it.
-- A warning about an unsupported or unknown API version, or the plugin not loading at all: your server isn't on Minecraft 1.21. Update to a current Paper 1.21 build.
-- Portals don't link: both lodestone frames need the exact same sign name, matching interior dimensions within your `config.yml` min/max settings, and `allow-cross-dimension` enabled if the two portals are in different worlds.
+- `UnsupportedClassVersionError` in the console: your server is running an older Java. Install Java 21 and make sure your server startup script points to it.
+- Plugin doesn't load or warns about unsupported API version: your server isn't on Minecraft 1.21. Update to a current Paper 1.21 build.
+- Portals don't link: both frames need the same sign name, matching interior dimensions within your `config.yml` min/max, and `allow-cross-dimension: true` if in different worlds.
 
 ## License
 
