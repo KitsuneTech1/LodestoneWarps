@@ -11,12 +11,14 @@ import java.lang.reflect.Proxy;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
+import java.util.Locale;
 import java.util.Set;
 import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class PortalFrameDetectorTest {
 
@@ -54,6 +56,42 @@ class PortalFrameDetectorTest {
     }
 
     @Test
+    void detectsFrameWhenStartingFromTheTopEdge() {
+        FakeWorld world = new FakeWorld();
+        world.addFrame(3, 4);
+
+        PortalFrameDetector detector = new PortalFrameDetector(1, 2, 2, 2);
+
+        assertNotNull(detector.detectFrame(world.block(1, 3, 0)));
+    }
+
+    @Test
+    void boundsCornerSearchForOversizedConnectedEdges() {
+        FakeWorld world = new FakeWorld();
+        world.addFrame(100, 4);
+
+        PortalFrameDetector detector = new PortalFrameDetector(1, 2, 2, 2);
+
+        assertNull(detector.detectFrame(world.block(99, 1, 0)));
+        assertTrue(world.getTypeCalls < 50);
+    }
+
+    @Test
+    void normalizesPortalNamesWithoutUsingTheDefaultLocale() {
+        Locale previous = Locale.getDefault();
+        try {
+            Locale.setDefault(Locale.forLanguageTag("tr-TR"));
+            FakeWorld world = new FakeWorld();
+            Portal portal = new Portal("I", UUID.randomUUID(), "player",
+                    new Location(world.world, 0, 0, 0), Set.of(), Set.of());
+
+            assertEquals("i", portal.getName());
+        } finally {
+            Locale.setDefault(previous);
+        }
+    }
+
+    @Test
     void portalDestinationUsesTheInteriorCenter() {
         FakeWorld world = new FakeWorld();
         Set<Location> frame = new HashSet<>();
@@ -74,6 +112,7 @@ class PortalFrameDetectorTest {
 
     private static final class FakeWorld {
         private final Map<Key, Material> blocks = new HashMap<>();
+        private int getTypeCalls;
         private final World world = (World) Proxy.newProxyInstance(
                 World.class.getClassLoader(), new Class<?>[]{World.class}, (proxy, method, args) -> {
                     if (method.getName().equals("getName")) {
@@ -110,7 +149,10 @@ class PortalFrameDetectorTest {
             return (Block) Proxy.newProxyInstance(
                     Block.class.getClassLoader(), new Class<?>[]{Block.class}, (proxy, method, args) -> {
                         return switch (method.getName()) {
-                            case "getType" -> blocks.getOrDefault(new Key(x, y, z), Material.AIR);
+                            case "getType" -> {
+                                getTypeCalls++;
+                                yield blocks.getOrDefault(new Key(x, y, z), Material.AIR);
+                            }
                             case "getLocation" -> new Location(world, x, y, z);
                             case "getRelative" -> {
                                 BlockFace face = (BlockFace) args[0];

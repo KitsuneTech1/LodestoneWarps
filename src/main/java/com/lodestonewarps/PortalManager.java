@@ -100,7 +100,7 @@ public class PortalManager {
     }
 
     public boolean isNameAvailable(String name) {
-        List<Portal> portals = portalsByName.get(name.toLowerCase());
+        List<Portal> portals = portalsByName.get(name.toLowerCase(Locale.ROOT));
         return portals == null || portals.size() < 2;
     }
 
@@ -200,7 +200,7 @@ public class PortalManager {
                             interiorBlocks);
 
                     // Register without saving (we're loading)
-                    portalsByName.computeIfAbsent(name, k -> new CopyOnWriteArrayList<>()).add(portal);
+                    portalsByName.computeIfAbsent(portal.getName(), k -> new CopyOnWriteArrayList<>()).add(portal);
                     for (Location loc : portal.getInteriorBlocks()) {
                         portalsByInterior.put(normalizeLocation(loc), portal);
                     }

@@ -31,9 +31,7 @@ public class PortalListener implements Listener {
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
     public void onPlayerMove(PlayerMoveEvent event) {
         // Only check on block changes for performance
-        if (event.getFrom().getBlockX() == event.getTo().getBlockX() &&
-                event.getFrom().getBlockY() == event.getTo().getBlockY() &&
-                event.getFrom().getBlockZ() == event.getTo().getBlockZ()) {
+        if (!isBlockChange(event.getFrom(), event.getTo())) {
             return;
         }
 
@@ -80,15 +78,28 @@ public class PortalListener implements Listener {
             }
         }
 
-        teleportPlayer(player, portal, destination);
-
-        cooldowns.put(player.getUniqueId(), System.currentTimeMillis());
-
-        // Remember where they arrived to prevent immediate re-teleport
-        lastPortalLocation.put(player.getUniqueId(), destination.getTeleportDestination());
+        recordSuccessfulTeleport(teleportPlayer(player, portal, destination), player.getUniqueId(),
+                destination.getTeleportDestination(), cooldowns, lastPortalLocation, System.currentTimeMillis());
     }
 
-    private void teleportPlayer(Player player, Portal from, Portal to) {
+    static boolean isBlockChange(Location from, Location to) {
+        return from != null && to != null &&
+                (from.getBlockX() != to.getBlockX() ||
+                        from.getBlockY() != to.getBlockY() ||
+                        from.getBlockZ() != to.getBlockZ());
+    }
+
+    static boolean recordSuccessfulTeleport(boolean teleported, UUID playerId, Location destination,
+            Map<UUID, Long> cooldowns, Map<UUID, Location> lastPortalLocation, long timestamp) {
+        if (!teleported || destination == null) {
+            return false;
+        }
+        cooldowns.put(playerId, timestamp);
+        lastPortalLocation.put(playerId, destination.clone());
+        return true;
+    }
+
+    private boolean teleportPlayer(Player player, Portal from, Portal to) {
         Location destination = to.getTeleportDestination().clone();
 
         // Preserve player's yaw and pitch
@@ -105,7 +116,9 @@ public class PortalListener implements Listener {
         }
 
         // Teleport
-        player.teleport(destination, org.bukkit.event.player.PlayerTeleportEvent.TeleportCause.PLUGIN);
+        if (!player.teleport(destination, org.bukkit.event.player.PlayerTeleportEvent.TeleportCause.PLUGIN)) {
+            return false;
+        }
 
         // Debug logging
         if (plugin.getConfig().getBoolean("debug-enabled", false)) {
@@ -140,6 +153,7 @@ public class PortalListener implements Listener {
         }
 
         player.sendMessage(plugin.getMessage("teleporting", "%name%", to.getName()));
+        return true;
     }
 
     private void spawnTeleportParticles(Location location, int color) {

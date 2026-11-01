@@ -52,21 +52,51 @@ public class PortalFrameDetector {
 
     private FrameResult tryDetectFrameInDirection(Block startBlock, BlockFace direction) {
         Block bottomLeft = findCorner(startBlock, BlockFace.DOWN, direction.getOppositeFace());
-        if (bottomLeft == null)
-            return null;
+        if (bottomLeft != null) {
+            FrameResult result = traceFrame(bottomLeft, direction);
+            if (result != null && result.getFrameBlocks().contains(startBlock.getLocation())) {
+                return result;
+            }
+        }
 
-        return traceFrame(bottomLeft, direction);
+        // A sign can be attached to the top edge. Move to the top-left corner
+        // first, then descend to the bottom-left corner before tracing.
+        Block topLeft = findCorner(startBlock, BlockFace.UP, direction.getOppositeFace());
+        if (topLeft == null) {
+            return null;
+        }
+        bottomLeft = findCorner(topLeft, BlockFace.DOWN, direction.getOppositeFace());
+        if (bottomLeft == null) {
+            return null;
+        }
+
+        FrameResult result = traceFrame(bottomLeft, direction);
+        return result != null && result.getFrameBlocks().contains(startBlock.getLocation()) ? result : null;
     }
 
     private Block findCorner(Block block, BlockFace vertical, BlockFace horizontal) {
         Block current = block;
 
-        while (current.getRelative(vertical).getType() == Material.LODESTONE) {
-            current = current.getRelative(vertical);
+        for (int i = 0; i <= maxHeight + 1; i++) {
+            Block next = current.getRelative(vertical);
+            if (next.getType() != Material.LODESTONE) {
+                break;
+            }
+            current = next;
+            if (i == maxHeight + 1) {
+                return null;
+            }
         }
 
-        while (current.getRelative(horizontal).getType() == Material.LODESTONE) {
-            current = current.getRelative(horizontal);
+        for (int i = 0; i <= maxWidth + 1; i++) {
+            Block next = current.getRelative(horizontal);
+            if (next.getType() != Material.LODESTONE) {
+                break;
+            }
+            current = next;
+            if (i == maxWidth + 1) {
+                return null;
+            }
         }
 
         return current;

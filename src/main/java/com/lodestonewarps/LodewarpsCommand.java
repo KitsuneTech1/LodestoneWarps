@@ -9,6 +9,7 @@ import org.bukkit.entity.Player;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Locale;
 import java.util.stream.Collectors;
 
 public class LodewarpsCommand implements CommandExecutor, TabCompleter {
@@ -28,7 +29,7 @@ public class LodewarpsCommand implements CommandExecutor, TabCompleter {
             return true;
         }
 
-        String subCommand = args[0].toLowerCase();
+        String subCommand = args[0].toLowerCase(Locale.ROOT);
 
         switch (subCommand) {
             case "list" -> handleList(sender);
@@ -96,7 +97,7 @@ public class LodewarpsCommand implements CommandExecutor, TabCompleter {
             return;
         }
 
-        String name = args[1].toLowerCase();
+        String name = args[1].toLowerCase(Locale.ROOT);
         List<Portal> portals = plugin.getPortalManager().getAllPortals().stream()
                 .filter(p -> p.getName().equals(name))
                 .collect(Collectors.toList());
@@ -140,7 +141,7 @@ public class LodewarpsCommand implements CommandExecutor, TabCompleter {
                 options.add("reload");
             }
             return options.stream()
-                    .filter(s -> s.startsWith(args[0].toLowerCase()))
+                    .filter(s -> s.startsWith(args[0].toLowerCase(Locale.ROOT)))
                     .collect(Collectors.toList());
         }
 
@@ -148,7 +149,7 @@ public class LodewarpsCommand implements CommandExecutor, TabCompleter {
             return plugin.getPortalManager().getAllPortals().stream()
                     .map(Portal::getName)
                     .distinct()
-                    .filter(s -> s.startsWith(args[1].toLowerCase()))
+                    .filter(s -> s.startsWith(args[1].toLowerCase(Locale.ROOT)))
                     .collect(Collectors.toList());
         }
 
