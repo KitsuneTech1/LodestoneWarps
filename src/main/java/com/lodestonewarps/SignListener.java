@@ -11,6 +11,8 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.SignChangeEvent;
 
+import java.util.Locale;
+
 public class SignListener implements Listener {
 
     private final LodestoneWarps plugin;
@@ -40,7 +42,7 @@ public class SignListener implements Listener {
             return;
         }
 
-        portalName = portalName.trim().toLowerCase();
+        portalName = portalName.trim().toLowerCase(Locale.ROOT);
 
         // Check if this name already has 2 portals
         if (!plugin.getPortalManager().isNameAvailable(portalName)) {

@@ -4,6 +4,7 @@ import org.bukkit.Location;
 import org.bukkit.World;
 
 import java.util.HashSet;
+import java.util.Locale;
 import java.util.Set;
 import java.util.UUID;
 
@@ -20,7 +21,7 @@ public class Portal {
 
     public Portal(String name, UUID creatorUUID, String creatorName, Location signLocation,
             Set<Location> frameBlocks, Set<Location> interiorBlocks) {
-        this.name = name.toLowerCase();
+        this.name = name.toLowerCase(Locale.ROOT);
         this.creatorUUID = creatorUUID;
         this.creatorName = creatorName;
         this.signLocation = signLocation;
