@@ -4,6 +4,7 @@
 
 Paper plugin for craftable linked lodestone portals in Minecraft.
 
+[![Build Status](https://github.com/KitsuneTech1/LodestoneWarps/actions/workflows/ci.yml/badge.svg)](https://github.com/KitsuneTech1/LodestoneWarps/actions)
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 ![Minecraft](https://img.shields.io/badge/Minecraft-1.21-brightgreen.svg)
 ![Java](https://img.shields.io/badge/Java-21-blue.svg)
@@ -24,6 +25,20 @@ Then to create a portal: build a rectangular lodestone frame with air inside, pl
 - Configurable min/max portal frame dimensions
 - Particle and sound effects on teleport (each can be toggled off)
 - `/lodewarps list` and `/lodewarps info` to see your portals and their link status
+
+
+## Architecture & Mechanics
+
+```mermaid
+flowchart LR
+    A[Build Lodestone Frame A] --> B[Attach Sign with Portal Name]
+    C[Build Lodestone Frame B] --> D[Attach Sign with Matching Name]
+    B & D --> E{Lodestone Links Network}
+    E -->|Validation Passed| F[Portals Linked Across Worlds/Dimensions]
+    G[Player Steps into Frame A] --> H{Check Teleport Cooldown}
+    H -- On Cooldown --> I[Prevent Teleport]
+    H -- Ready --> J[Trigger Sound/Particles & Teleport to Frame B]
+```
 
 ## Commands
 
